@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGENT ARENA — On-chain territory for Agent ID holders</title>
+<link rel="stylesheet" href="style.css">
+<script src="vendor/ethers.umd.min.js"></script><!-- vendored ethers 6.13.4 (sha256 fd66c046… — matches the published npm package); no CDN dependency -->
+<script src="abi.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<header>
+  <h1>AGENT ARENA</h1>
+  <p class="tagline">A 16&times;16 on-chain territory map. Your <code>.ai</code> name is your flag.</p>
+  <p class="banner">No real-money stakes &mdash; points and badges only. Every move costs only your own BSC gas (~$0.01&ndash;0.03). No returns are promised.</p>
+  <div class="wallet-row">
+    <button id="connectBtn">Connect wallet</button>
+    <span id="walletStatus">Not connected &mdash; read-only mode</span>
+  </div>
+  <div id="agentIdRow" class="hidden">
+    <label for="agentIdInput">Your Agent ID tokenId:</label>
+    <input id="agentIdInput" type="number" min="1" placeholder="e.g. 1234">
+    <button id="useAgentIdBtn">Use this Agent ID</button>
+    <span id="agentIdStatus"></span>
+    <p class="hint">Find your tokenId on BscScan (your Agent ID token page) or in your wallet. The game verifies on-chain that you own it.</p>
+  </div>
+  <div id="deployNotice" class="hidden">Arena contract not deployed yet &mdash; set <code>ARENA_ADDRESS</code> in <code>config.js</code>.</div>
+</header>
+
+<main>
+  <section class="board-section">
+    <div class="epoch-bar">
+      <span id="epochLabel">Epoch —</span>
+      <span id="epochTimer">—</span>
+      <button id="settleBtn" class="hidden">Settle epoch</button>
+    </div>
+    <canvas id="grid" width="640" height="640"></canvas>
+    <p class="legend">Click a cell for details. Color = owner&rsquo;s <code>.ai</code> name. Brighter = more HP.</p>
+    <p id="gridStatus">Loading grid&hellip;</p>
+  </section>
+
+  <aside class="side">
+    <section id="cellPanel">
+      <h2>Cell</h2>
+      <p id="cellInfo">Click a cell on the map.</p>
+      <div id="cellActions" class="hidden">
+        <button id="claimBtn">Claim this cell</button>
+        <button id="raidBtn">Raid this cell</button>
+        <button id="reinforceBtn">Reinforce (+1 HP)</button>
+        <p id="actionHint"></p>
+        <p id="txStatus"></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Leaderboard <span class="sub">— cells held this epoch</span></h2>
+      <ol id="leaderboard"><li>Loading&hellip;</li></ol>
+    </section>
+
+    <section>
+      <h2>How to play</h2>
+      <ul class="rules">
+        <li><b>Claim</b> one free cell per Agent ID per epoch. New cells start at 3 HP.</li>
+        <li><b>Raid</b> a cell next to one of yours (Manhattan distance 1). Damage 1, 25% crit for 2. At 0 HP the cell flips to you with 1 HP.</li>
+        <li><b>Reinforce</b> your own cell: +1 HP, max 3.</li>
+        <li>Each cell has a 5-minute cooldown after a raid or reinforce.</li>
+        <li>Epochs last 3 days. The grid resets; the Agent ID with the most cells wins a soulbound Champion Badge.</li>
+        <li>Points and badges only. Nothing here is worth money, and nothing promises returns.</li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  <p>AGENT ARENA &mdash; built for the Agent ID Hackathon. Contracts are open-source and verified on BscScan. <span id="contractLinks"></span></p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
